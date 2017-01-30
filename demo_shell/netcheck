@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+import subprocess, re, shlex, os, inspect
+import appindicator, glib, gtk, requests
+import signal, time, pynotify, threading, gobject, webbrowser
+
+# maintained at
+# /https://github.com/kaustubhhiware/netcheck
+#
+# Developed by: Kaustubh Hiware (hiwarekaustubh@googlemail.com)
+#
+
+APPINDICATOR_ID = 'netcheck'
+ping_host_name = "google.com"
+
+curr_dir =  os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))) # script directory
+YES_img = curr_dir + '/images/connected.png'
+NO_img = curr_dir + '/images/disconnected.png'
+
+def open_url(source):
+    webbrowser.open("https://github.com/kaustubhhiware/netcheck")
+
+
+class netchecker:
+	def __init__(self):
+		# (appindicator identifier, icon, category)
+		self.indicator = appindicator.Indicator(APPINDICATOR_ID, NO_img, appindicator.CATEGORY_COMMUNICATIONS)
+
+		self.indicator.set_status(appindicator.STATUS_ACTIVE)
+		self.menu = gtk.Menu()
+
+		item_about = gtk.MenuItem("About - Check your ping")
+		item_about.connect("activate", open_url)
+		self.menu.append(item_about)
+
+		item_exit = gtk.MenuItem("Exit")
+		item_exit.connect('activate',self.exit_indicator)
+		self.menu.append(item_exit)
+
+		self.menu.show_all()
+		self.indicator.set_menu(self.menu)
+
+		self.ping_timeout = 3
+		self.update_interval = 5 # Refresh interval
+
+		self.indicator.set_icon(NO_img)
+		self.update_ui()
+
+		glib.timeout_add_seconds(self.update_interval,self.update_timeout)
+
+	def ping(self, host_name):
+		# pings google.com and returns a dot . on success and an X on failure
+		ping_command = "ping -i " + str(self.ping_timeout) + " -c 1 " + host_name
+		process = subprocess.Popen(shlex.split(ping_command), stdout=subprocess.PIPE)
+		output = process.stdout.read()
+		matches = re.findall(r"time=[0-9]\w+", output)
+		if len(matches):
+			# print matches[0].split("=")[-1]
+			return matches[0].split("=")[-1]
+		else:
+			return False
+
+	def update_timeout(self):
+		self.update_ui()
+		return True
+
+	def update_ui(self):
+		ping_response = self.ping(ping_host_name)
+
+		if ping_response == False:
+			# if False is received, play connection_down sound. as todo
+			self.indicator.set_icon( NO_img )
+			self.indicator.set_label( "--" )
+		else:
+			self.indicator.set_icon(YES_img)
+			self.indicator.set_label( str( ping_response ) + " ms" )
+
+	def exit_indicator(self, source):
+		gtk.main_quit()
+
+	def main(self):
+		gtk.main()
+
+
+if __name__ == "__main__":
+	# Stop with Ctrl+C
+	signal.signal(signal.SIGINT, signal.SIG_DFL)
+	indicator = netchecker()
+	indicator.main()
