@@ -17,9 +17,11 @@ A shell implemented in C. Written as a part of Operating Systems (CS39002) cours
 * **rmdir <dir>** - Remove the directory (Alerts if no such file or directory)
 
 * **ls** - List contents of pwd
+
  ![images/ls](images/ls.png)
 
 * **ls -l** - List the contents in long listing format
+
  ![images/ls_l](images/ls_l.png)
 
 * **cp <file1> <file2>** - Copy contents of file1 to file2; only if file1 was more recently modified. Create file2 if not present already.
