@@ -4,10 +4,6 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-/*
-* Assignment 2 part 2 - run.c
-* 14CS30011 : Hiware Kaustubh Narendra
-*/
 /* execute our shell process from shell.c
 */
 /* get shell executable first - gcc shell.c -o myshell

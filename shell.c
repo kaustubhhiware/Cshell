@@ -20,8 +20,6 @@
 #define CYAN "\x1b[96m"
 // colour guide - https://github.com/shiena/ansicolor/blob/master/README.md
 /*
-* Assignment 2 part 2 - shell.c
-* 14CS30011 : Hiware Kaustubh Narendra
 * Usage - make clean ; clear ; make ; ./Cshell
 */
 /* implement shell functions
@@ -34,10 +32,10 @@
 *  ls (support ls -l)                       - Done ls & -l
 *  cp <file1> <file2>                       - Done cp
 *  exit                                     - Done exit
-*  execute any other command like ./a.out   - TODo [WIP]
+*  execute any other command like ./a.out   - Done exec
 * support background execution - &          - Done &
-* redirect input output >, <                - TODo
-*  a.out | b.out - must support a| b| c     - TODo
+* redirect input output >, <                - Done
+*  a.out | b.out - must support a| b| c     - Done
 * Additional - clear
 * Additional - screenfetch
 * Additional - up down keys, history- ?
